@@ -6,7 +6,7 @@ import { UsersService } from '@modules/users/users.service';
 import { MailService } from '@modules/mail/mail.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RegisterDto, AuthResponseDto } from '@modules/auth/dto/auth.dto';
-import { UserResponseDto } from '@modules/users/dto/user-response.dto';
+import { UserResponseDto } from '@modules/users/dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,10 +39,7 @@ export class AuthService {
 
   async register(createUserDto: RegisterDto): Promise<AuthResponseDto> {
     const user = await this.usersService.create(createUserDto);
-    const verificationToken = this.jwtService.sign(
-      { sub: user.id },
-      { expiresIn: '24h' }
-    );
+    const verificationToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '24h' });
     await this.mailService.sendWelcomeEmail(user.email);
     await this.mailService.sendVerificationEmail(user.email, verificationToken);
     return this.login(user as UserResponseDto);
