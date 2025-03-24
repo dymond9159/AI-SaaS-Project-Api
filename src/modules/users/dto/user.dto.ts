@@ -24,7 +24,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {}
 
 export class UserResponseDto {
   @ApiProperty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   email: string;
