@@ -1,63 +1,42 @@
-
-import { IsEmail, IsString, MinLength, IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-
-export class LoginDto {
-  @ApiProperty()
-  @IsEmail()
-  email: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(6)
-  password: string;
-}
+import { IsEmail, IsString, MinLength } from 'class-validator';
+import { Role } from '@prisma/client';
 
 export class RegisterDto {
-  @ApiProperty()
   @IsEmail()
   email: string;
 
-  @ApiProperty()
   @IsString()
   @MinLength(6)
   password: string;
 
-  @ApiProperty()
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  name?: string;
 }
 
-
-export class UserResponseDto {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
+export class LoginDto {
+  @IsEmail()
   email: string;
 
-  @ApiProperty()
-  name: string;
+  @IsString()
+  password: string;
+}
 
-  @ApiProperty()
-  role: string;
-
-  @ApiProperty()
-  isEmailVerified: boolean;
+export class UserResponseDto {
+  id: string;
+  email: string;
+  name?: string;
+  role: Role;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class AuthResponseDto {
-  @ApiProperty()
   accessToken: string;
-
-  @ApiProperty()
   refreshToken: string;
 }
 
-
 export class ForgotPasswordDto {
-  @ApiProperty()
   @IsEmail()
   email: string;
 }
