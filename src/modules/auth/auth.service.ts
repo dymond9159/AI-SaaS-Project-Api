@@ -15,22 +15,22 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
-      const { password, ...result } = user;
+      const { password: _, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, sub: user.id };
+  async login(user: Omit<User, 'password'>): Promise<Tokens> {
+    const payload: JwtPayload = { email: user.email, sub: user.id, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload),
       refreshToken: this.jwtService.sign(payload, {
-        secret: this.configService.get('app.jwt.refreshSecret'),
-        expiresIn: this.configService.get('app.jwt.refreshExpiresIn'),
+        secret: this.configService.get<string>('app.jwt.refreshSecret'),
+        expiresIn: this.configService.get<string>('app.jwt.refreshExpiresIn'),
       }),
     };
   }
