@@ -11,7 +11,7 @@
     "prisma:reset": "prisma reset --force-reset && prisma db seed",
     "prisma:validate": "prisma validate",
     "prisma:format": "prisma format",
-    "prisma:entity-generate": "prisma generate --generator nestjsDto & typeorm-model-generator",
+    "prisma:entity-generate": "npx prisma generate --generator nestjsDto && npx typeorm-model-generator",
     "prisma:migrate-auto": "sh ./scripts/migrate-auto.sh",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -53,6 +53,7 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
+    "prisma-generator-nestjs-dto": "^1.1.4",
     "typeorm-model-generator": "^0.4.6"
   }
 }
