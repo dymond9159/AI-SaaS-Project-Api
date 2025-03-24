@@ -33,7 +33,7 @@ model User {
   email         String   @unique
   password      String
   name          String?
-  role          Role?    @default(User)
+  role          Role     @default(User)
   emailVerified Boolean  @default(false)
   provider      String? // "google", "facebook", etc.
   providerId    String? // user id in OAuth service
