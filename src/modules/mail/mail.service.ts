@@ -17,6 +17,19 @@ export class MailService {
     });
   }
 
+  async sendPasswordResetEmail(email: string, token: string) {
+    const resetLink = `${process.env.APP_URL}/reset-password?token=${token}`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Password Reset Request',
+      template: 'reset-password',
+      context: {
+        email: email,
+        resetLink: resetLink,
+      },
+    });
+  }
+
   async sendVerificationEmail(email: string, token: string) {
     await this.mailerService.sendMail({
       to: email,
