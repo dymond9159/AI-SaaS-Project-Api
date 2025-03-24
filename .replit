@@ -1,6 +1,6 @@
 
 entrypoint = "index.js"
-modules = ["nodejs-22", "postgresql-16", "openssl-1.1.x"]
+modules = ["nodejs-22", "postgresql-16", "openssl-1.1.x", "openssl-3.0.x"]
 hidden = [".config", "package-lock.json"]
 
 [gitHubImport]
