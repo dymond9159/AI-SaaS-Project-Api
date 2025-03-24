@@ -39,7 +39,12 @@ export class AuthService {
 
   async register(createUserDto: RegisterDto): Promise<AuthResponseDto> {
     const user = await this.usersService.create(createUserDto);
+    const verificationToken = this.jwtService.sign(
+      { sub: user.id },
+      { expiresIn: '24h' }
+    );
     await this.mailService.sendWelcomeEmail(user.email);
+    await this.mailService.sendVerificationEmail(user.email, verificationToken);
     return this.login(user as UserResponseDto);
   }
 
