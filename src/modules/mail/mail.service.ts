@@ -6,6 +6,17 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
+  async sendWelcomeEmail(email: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Welcome to Our Platform',
+      template: 'welcome',
+      context: {
+        email: email,
+      },
+    });
+  }
+
   async sendVerificationEmail(email: string, token: string) {
     await this.mailerService.sendMail({
       to: email,
