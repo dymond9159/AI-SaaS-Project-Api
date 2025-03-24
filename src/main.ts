@@ -1,4 +1,3 @@
-
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
@@ -10,8 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS API')
-    .setDescription('API Documentation')
+    .setTitle('AI SaaS Platform API')
+    .setDescription('API Documentation for powering intelligent video creation & automation')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
