@@ -9,3 +9,10 @@ export default registerAs('app', () => ({
   mailFrom: process.env.MAIL_FROM || 'noreply@example.com',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
 }));
+import { registerAs } from '@nestjs/config';
+
+export const appConfig = registerAs('app', () => ({
+  port: parseInt(process.env.PORT, 10) || 3000,
+  jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
+}));
