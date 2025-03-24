@@ -6,7 +6,7 @@ import { UsersService } from '@modules/users/users.service';
 import { MailService } from '@modules/mail/mail.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RegisterDto, AuthResponseDto } from '@modules/auth/dto/auth.dto';
-import { UserResponseDto } from '@modules/users/dto/user.dto';
+import { UserEntity } from '@modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -17,19 +17,20 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<UserResponseDto | null> {
+  async validateUser(email: string, password: string): Promise<UserEntity> {
     const user = await this.usersService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const { password: _, emailVerified, ...result } = user;
-      return {
-        ...result,
-        isEmailVerified: emailVerified
-      } as UserResponseDto;
+    if (user) {
+      if (await bcrypt.compare(password, user.password)) {
+        return user;
+      } else {
+        throw new UnauthorizedException('Incorrect password');
+      }
+    } else {
+      throw new UnauthorizedException('Invalidate Credentials');
     }
-    return null;
   }
 
-  async login(user: UserResponseDto): Promise<AuthResponseDto> {
+  async login(user: UserEntity): Promise<AuthResponseDto> {
     const payload: JwtPayload = { email: user.email, sub: user.id, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload),
@@ -45,11 +46,7 @@ export class AuthService {
     const verificationToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '24h' });
     await this.mailService.sendWelcomeEmail(user.email);
     await this.mailService.sendVerificationEmail(user.email, verificationToken);
-    const { emailVerified, password: _, ...result } = user;
-    return this.login({
-      ...result,
-      isEmailVerified: emailVerified
-    } as UserResponseDto);
+    return this.login(user);
   }
 
   async verifyEmail(token: string) {
