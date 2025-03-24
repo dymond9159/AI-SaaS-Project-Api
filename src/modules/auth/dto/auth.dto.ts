@@ -1,5 +1,4 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
-import { Role } from '@prisma/client';
 
 export class RegisterDto {
   @IsEmail()
@@ -19,16 +18,6 @@ export class LoginDto {
 
   @IsString()
   password: string;
-}
-
-export class UserResponseDto {
-  id: string;
-  email: string;
-  name?: string;
-  role: Role;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export class AuthResponseDto {

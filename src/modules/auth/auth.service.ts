@@ -1,14 +1,12 @@
-
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@modules/users/users.service';
 import { MailService } from '@modules/mail/mail.service';
-import { UserResponseDto } from './dto/user-response.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
-import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import * as bcrypt from 'bcrypt';
+import { RegisterDto, LoginDto, ForgotPasswordDto, AuthResponseDto } from '@modules/auth/dto/auth.dto';
+import { UserResponseDto } from '@modules/users/dto/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +19,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<UserResponseDto | null> {
     const user = await this.usersService.findByEmail(email);
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password: _, ...result } = user;
       return result as UserResponseDto;
     }
@@ -60,10 +58,7 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('User not found');
     }
-    const token = this.jwtService.sign(
-      { sub: user.id },
-      { expiresIn: '15m' },
-    );
+    const token = this.jwtService.sign({ sub: user.id }, { expiresIn: '15m' });
     await this.mailService.sendPasswordResetEmail(email, token);
     return { message: 'Password reset email sent' };
   }

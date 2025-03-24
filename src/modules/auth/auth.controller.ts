@@ -1,4 +1,3 @@
-
 import { Controller, Post, Body, UseGuards, Get, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto, ForgotPasswordDto } from './dto/auth.dto';
