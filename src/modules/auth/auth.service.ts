@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@modules/users/users.service';
 import { MailService } from '@modules/mail/mail.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { RegisterDto, LoginDto, ForgotPasswordDto, AuthResponseDto } from '@modules/auth/dto/auth.dto';
+import { RegisterDto, AuthResponseDto } from '@modules/auth/dto/auth.dto';
 import { UserResponseDto } from '@modules/users/dto/user-response.dto';
 
 @Injectable()
