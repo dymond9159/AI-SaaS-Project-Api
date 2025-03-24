@@ -7,3 +7,23 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  SuperAdmin
+  Admin
+  User
+  Partner
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  name          String?
+  role          Role?    @default(User)
+  emailVerified Boolean  @default(false)
+  provider      String? // "google", "facebook", etc.
+  providerId    String? // user id in OAuth service
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
