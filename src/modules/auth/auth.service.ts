@@ -20,8 +20,11 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<UserResponseDto | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const { password: _, ...result } = user;
-      return result as UserResponseDto;
+      const { password: _, emailVerified, ...result } = user;
+      return {
+        ...result,
+        isEmailVerified: emailVerified
+      } as UserResponseDto;
     }
     return null;
   }
@@ -42,7 +45,11 @@ export class AuthService {
     const verificationToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '24h' });
     await this.mailService.sendWelcomeEmail(user.email);
     await this.mailService.sendVerificationEmail(user.email, verificationToken);
-    return this.login(user as UserResponseDto);
+    const { emailVerified, password: _, ...result } = user;
+    return this.login({
+      ...result,
+      isEmailVerified: emailVerified
+    } as UserResponseDto);
   }
 
   async verifyEmail(token: string) {
