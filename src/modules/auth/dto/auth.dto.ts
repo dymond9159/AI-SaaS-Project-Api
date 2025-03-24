@@ -29,6 +29,33 @@ export class RegisterDto {
   name: string;
 }
 
+
+export class UserResponseDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  role: string;
+
+  @ApiProperty()
+  isEmailVerified: boolean;
+}
+
+export class AuthResponseDto {
+  @ApiProperty()
+  accessToken: string;
+
+  @ApiProperty()
+  refreshToken: string;
+}
+
+
 export class ForgotPasswordDto {
   @ApiProperty()
   @IsEmail()

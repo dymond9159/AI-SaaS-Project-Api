@@ -15,16 +15,16 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
+  async validateUser(email: string, password: string): Promise<UserResponseDto | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
       const { password: _, ...result } = user;
-      return result;
+      return result as UserResponseDto;
     }
     return null;
   }
 
-  async login(user: Omit<User, 'password'>): Promise<Tokens> {
+  async login(user: UserResponseDto): Promise<AuthResponseDto> {
     const payload: JwtPayload = { email: user.email, sub: user.id, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload),
@@ -35,10 +35,10 @@ export class AuthService {
     };
   }
 
-  async register(createUserDto: any) {
+  async register(createUserDto: RegisterDto): Promise<AuthResponseDto> {
     const user = await this.usersService.create(createUserDto);
     await this.mailService.sendWelcomeEmail(user.email);
-    return this.login(user);
+    return this.login(user as UserResponseDto);
   }
 
   async verifyEmail(token: string) {
